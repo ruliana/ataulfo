@@ -68,8 +68,8 @@ describe Ataulfo::PatternMatching do
   it 'matches fixed values in variables' do
     passed_through_match = false
     object               = Struct.new(:a_method).new('something')
-    fixed_value1 = 'other_thing'
-    fixed_value2 = 'something'
+    fixed_value1         = 'other_thing'
+    fixed_value2         = 'something'
 
     with object do
       like a_method: fixed_value1 do
@@ -100,7 +100,43 @@ describe Ataulfo::PatternMatching do
     expect(passed_through_match).to be_true
   end
 
-  it 'matches nested objects'
+  it 'matches a simple nested object' do
+    passed_through_match = false
+    object               = Struct.new(:a_method).new(Struct.new(:inner).new('something'))
+
+    with object do
+      like a_method: { inner: my_var } do
+        expect(my_var).to eq('something')
+        passed_through_match = true
+      end
+    end
+
+    expect(passed_through_match).to be_true
+  end
+
+  it 'matches complex nested expression' do
+    passed_through_match = false
+    num                  = Struct.new(:value)
+    add                  = Struct.new(:augend, :addend)
+    prod                 = Struct.new(:multiplicand, :multiplier)
+
+    object = prod[add[num[1], num[2]], add[num[3], num[4]]]
+
+    with object do
+      like multiplicand: { augend: { value: 99 }, addend: { value: x2 } }, multiplier: { augend: { value: x3 }, addend: { value: x4 } } do
+        fail 'should not match a method with wrong value'
+      end
+      like multiplicand: { augend: { value: 1 }, addend: { value: x2 } }, multiplier: { augend: { value: x3 }, addend: { value: x4 } } do
+        expect(x2).to eq(2)
+        expect(x3).to eq(3)
+        expect(x4).to eq(4)
+        passed_through_match = true
+      end
+    end
+
+    expect(passed_through_match).to be_true
+  end
+
   it 'matches hashes'
   it 'matches arrays'
 end
