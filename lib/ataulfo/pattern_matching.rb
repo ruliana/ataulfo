@@ -11,8 +11,8 @@ module Ataulfo
         end
       end
 
-      def method_missing(method, *args, &block)
-        @other_self.send method, *args, &block
+      def method_missing(method_name, *args, &block)
+        @other_self.send method_name, *args, &block
       end
     end
 
