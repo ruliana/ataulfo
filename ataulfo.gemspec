@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
   gem.version       = Ataulfo::VERSION
   gem.authors       = ['Ronie Uliana']
   gem.email         = ['ronie.uliana@gmail.com']
-  gem.description   = %q{Pattern Matching for Ruby}
-  gem.summary       = %q{This gem adds a pattern matching instruction for Ruby}
-  gem.homepage      = ''
+  gem.description   = %q{Pattern Matching for Ruby (objects only)}
+  gem.summary       = %q{A DSL for pattern matching over object in Ruby.}
+  gem.homepage      = 'https://github.com/ruliana/ataulfo'
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
