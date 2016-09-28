@@ -1,8 +1,7 @@
-require 'rspec'
-require_relative '../../lib/ataulfo'
+# frozen_string_literal: true
+require 'spec_helper'
 
 describe Ataulfo::PatternMatching do
-
   it 'matches a single method' do
     passed_through_match = false
 
@@ -15,7 +14,7 @@ describe Ataulfo::PatternMatching do
       end
     end
 
-    expect(passed_through_match).to be_true
+    expect(passed_through_match).to be_truthy
   end
 
   it 'matches two methods' do
@@ -31,7 +30,7 @@ describe Ataulfo::PatternMatching do
       end
     end
 
-    expect(passed_through_match).to be_true
+    expect(passed_through_match).to be_truthy
   end
 
   it 'two bodies, one execution' do
@@ -41,7 +40,7 @@ describe Ataulfo::PatternMatching do
 
     with object do
       like this_does_not_exist: x do
-        fail 'should not match a method that does not exist'
+        raise 'should not match a method that does not exist'
       end
       like a_method: x do
         expect(x).to eq('something')
@@ -49,7 +48,7 @@ describe Ataulfo::PatternMatching do
       end
     end
 
-    expect(passed_through_match).to be_true
+    expect(passed_through_match).to be_truthy
   end
 
   it 'matches fixed values' do
@@ -59,33 +58,33 @@ describe Ataulfo::PatternMatching do
 
     with object do
       like a_method: 'other_thing' do
-        fail 'should not match a method with wrong value'
+        raise 'should not match a method with wrong value'
       end
       like a_method: 'something' do
         passed_through_match = true
       end
     end
 
-    expect(passed_through_match).to be_true
+    expect(passed_through_match).to be_truthy
   end
 
   it 'matches fixed values in variables' do
     passed_through_match = false
 
-    object       = Struct.new(:a_method).new('something')
-    fixed_value1 = 'other_thing'
-    fixed_value2 = 'something'
+    object = Struct.new(:a_method).new('something')
+    other_thing = 'other_thing'
+    something = 'something'
 
     with object do
-      like a_method: fixed_value1 do
-        fail 'should not match a method with wrong value'
+      like a_method: other_thing do
+        raise 'should not match a method with wrong value'
       end
-      like a_method: fixed_value2 do
+      like a_method: something do
         passed_through_match = true
       end
     end
 
-    expect(passed_through_match).to be_true
+    expect(passed_through_match).to be_truthy
   end
 
   it 'matches fixed and var values mixed' do
@@ -95,7 +94,7 @@ describe Ataulfo::PatternMatching do
 
     with object do
       like a_method: 'does not match', another_method: my_var do
-        fail 'should not match a method with wrong value'
+        raise 'should not match a method with wrong value'
       end
       like a_method: 'something', another_method: my_var do
         expect(my_var).to eq('other value')
@@ -103,7 +102,7 @@ describe Ataulfo::PatternMatching do
       end
     end
 
-    expect(passed_through_match).to be_true
+    expect(passed_through_match).to be_truthy
   end
 
   it 'matches a simple nested object' do
@@ -118,7 +117,7 @@ describe Ataulfo::PatternMatching do
       end
     end
 
-    expect(passed_through_match).to be_true
+    expect(passed_through_match).to be_truthy
   end
 
   it 'matches complex nested expression' do
@@ -132,7 +131,7 @@ describe Ataulfo::PatternMatching do
 
     with object do
       like multiplicand: { augend: { value: 99 }, addend: { value: x2 } }, multiplier: { augend: { value: x3 }, addend: { value: x4 } } do
-        fail 'should not match a method with wrong value'
+        raise 'should not match a method with wrong value'
       end
       like multiplicand: { augend: { value: 1 }, addend: n2 }, multiplier: { augend: { value: x3 }, addend: { value: x4 } } do
         expect(n2).to eq(num[2])
@@ -142,7 +141,7 @@ describe Ataulfo::PatternMatching do
       end
     end
 
-    expect(passed_through_match).to be_true
+    expect(passed_through_match).to be_truthy
   end
 
   it 'matches hashes'
